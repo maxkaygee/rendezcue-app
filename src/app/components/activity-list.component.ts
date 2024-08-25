@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { Firestore, collectionData, collection } from '@angular/fire/firestore';
+import { CommonModule } from '@angular/common';
+import { ActivityService } from '../services/activity.service';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-activity-list',
+  standalone: true,
+  imports: [CommonModule],
   template: `
     <h2>Activities</h2>
     <ul>
@@ -11,17 +14,14 @@ import { Observable } from 'rxjs';
         {{ activity.name }} - {{ activity.category }}
       </li>
     </ul>
-  `,
-  standalone: true
+  `
 })
 export class ActivityListComponent implements OnInit {
   activities$: Observable<any[]>;
 
-  constructor(private firestore: Firestore) {
-    const activitiesCollection = collection(this.firestore, 'activities');
-    this.activities$ = collectionData(activitiesCollection);
+  constructor(private activityService: ActivityService) {
+    this.activities$ = this.activityService.getActivities();
   }
 
-  ngOnInit(): void {
-  }
+  ngOnInit(): void {}
 }
