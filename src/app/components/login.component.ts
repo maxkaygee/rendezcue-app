@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule],
   template: `
     <div class="login-container">
       <h2>Login to RendezCue</h2>
@@ -23,6 +23,7 @@ import { AuthService } from '../services/auth.service';
         <button type="submit" [disabled]="loginForm.invalid">Login</button>
       </form>
       <p *ngIf="errorMessage" class="error-message">{{ errorMessage }}</p>
+      <p class="register-link">Don't have an account? <a routerLink="/register">Register here</a></p>
     </div>
   `,
   styles: [`
@@ -33,6 +34,7 @@ import { AuthService } from '../services/auth.service';
     button { width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; cursor: pointer; }
     button:disabled { background-color: #cccccc; }
     .error-message { color: red; }
+    .register-link { margin-top: 15px; text-align: center; }
   `]
 })
 export class LoginComponent {
@@ -53,14 +55,15 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const { email, password } = this.loginForm.value;
-      this.authService.login(email!, password!)
-        .then(() => {
+      this.authService.login(email!, password!).subscribe({
+        next: () => {
           this.router.navigate(['/activities']);
-        })
-        .catch(error => {
+        },
+        error: (error) => {
           this.errorMessage = 'Failed to login. Please check your credentials.';
           console.error('Login error:', error);
-        });
+        }
+      });
     }
   }
 }
