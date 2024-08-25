@@ -8,6 +8,6 @@ export const routes: Routes = [
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegistrationComponent },
   { path: 'activities', component: ActivityListComponent },
-  { path: '', redirectTo: '/activities', pathMatch: 'full' }
-  { path: 'add-activity', component: ActivityFormComponent },
+  { path: '', redirectTo: '/activities', pathMatch: 'full' },
+  { path: 'add-activity', component: ActivityFormComponent }
 ];
